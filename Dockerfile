@@ -22,6 +22,11 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get autoclean
 
 RUN set -eux; \
+    sed -ri 's/^# (en_US.UTF-8 UTF-8)$/\1/' /etc/locale.gen; \
+    locale-gen en_US.UTF-8; \
+    dpkg-reconfigure locales
+
+RUN set -eux; \
     groupadd -g 1000 steam; \
     useradd -m -u 1000 -g steam -s /bin/bash steam
 
