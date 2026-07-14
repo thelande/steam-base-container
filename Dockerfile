@@ -36,7 +36,5 @@ USER steam:steam
 
 WORKDIR /data
 
-VOLUME [ "/data", "/home/steam/.local/share/Steam" ]
-
 STOPSIGNAL SIGINT
 ENTRYPOINT [ "/entrypoint.sh" ]
