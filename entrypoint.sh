@@ -15,8 +15,6 @@ set -eu
 DO_VALIDATE="${DO_VALIDATE:-0}"
 SKIP_UPDATE="${SKIP_UPDATE:-0}"
 
-INSTALL_DIR="/data"
-
 # Verify APP_ID and APP_NAME are set and start-server.sh exists.
 if [[ -z "$APP_ID" ]]; then
     echo "error: APP_ID is not set."
