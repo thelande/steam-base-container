@@ -1,5 +1,5 @@
 DATE = formatdate("YYYY.MM.DD", timestamp())
-APP = "7dtd"
+APP = "steam-base-container"
 SOURCE = "https://github.com/thelande/steam-base-container"
 variable "GIT_SHA" {}
 
