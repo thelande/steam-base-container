@@ -30,11 +30,10 @@ RUN set -eux; \
     groupadd -g 1000 steam; \
     useradd -m -u 1000 -g steam -s /bin/bash steam
 
-COPY --chmod=0755 entrypoint.sh /
+COPY --chmod=0755 lib.sh install-game.sh /
 
 USER steam:steam
 
 WORKDIR /data
 
 STOPSIGNAL SIGINT
-ENTRYPOINT [ "/entrypoint.sh" ]

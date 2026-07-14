@@ -12,8 +12,6 @@ This project provides a lightweight Debian-based container image that includes S
 - **SteamCMD Included**: Pre-installed for easy game server installation and updates
 - **Multi-Architecture Support**: Built with Docker BuildKit for cross-platform builds
 - **Production Hardening**: Runs as a non-root user (`steam`)
-- **Volume Mounting**: Supports `/data` and `/home/steam/.local/share/Steam` volumes
-- **BuildCaching**: Optimized APT caching during image builds
 
 ## Quick Start
 
@@ -29,7 +27,7 @@ docker buildx build --load -t steam-base-container:latest .
 docker run -d \
   --name my-game-server \
   -v /path/to/data:/data \
-  -v /path/to/steam:/home/steam/.local/share/Steam \
+  -v /path/to/steam:/home/steam \
   -e APP_ID=730 \
   -e APP_NAME="Counter-Strike 2" \
   steam-base-container:latest
@@ -67,23 +65,39 @@ EXPOSE 27015 27016
 ### Docker Compose Example
 
 ```yaml
-version: '3.8'
-
 services:
-  game-server:
+  # Run an init container to install the game
+  init-server:
     build: .
-    container_name: my-game-server
-    volumes:
+    container_name: init-game-server
+    volumes: &volumes
       - ./data:/data
       - ./steam:/home/steam/.local/share/Steam
-    environment:
+    environment: &env
       - APP_ID=730
       - APP_NAME="Counter-Strike 2"
       - DO_VALIDATE=0
+    command: ["/install-game.sh"]
+
+  game-server:
+    build: .
+    container_name: my-game-server
+    volumes: *volumes
+    environment: *env
     restart: unless-stopped
     ports:
       - "27015:27015"
       - "27016:27016"
+    command: ["/start-server.sh"]
+    healthcheck:
+      test: ["CMD-SHELL", "[ -z $(timeout 1 bash -c ': > /dev/tcp/localhost/27015') ]"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 2m
+    depends_on:
+      init-server:
+        condition: service_completed_successfully
 ```
 
 ## Building Tags
@@ -98,7 +112,7 @@ The `docker-bake.hcl` defines multiple build targets:
 Run all targets:
 
 ```bash
-docker buildx bake --set image-all.push=true
+docker buildx bake image-all --push
 ```
 
 ## License
