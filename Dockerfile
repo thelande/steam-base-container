@@ -12,11 +12,12 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     echo steam steam/question select "I AGREE" | debconf-set-selections; \
     apt-get update; \
     apt-get install -y \
-        steamcmd \
         ca-certificates \
-        tzdata \
+        locales \
+        steamcmd \
         procps \
         rsync \
+        tzdata \
     ; \
     apt-get autoclean
 
