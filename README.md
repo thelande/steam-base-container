@@ -41,6 +41,7 @@ docker run -d \
 |----------|----------|-------------|
 | `APP_ID` | Yes | Steam App ID for the game server |
 | `APP_NAME` | Yes | Human-readable name of the game |
+| `INSTALL_DIR` | No (default: `/data`) | Directory where SteamCMD installs the game files. Must be writable by the `steam` user |
 | `DO_VALIDATE` | No (default: 0) | Set to `1` to validate existing files before starting |
 | `SKIP_UPDATE` | No (default: 0) | Set to `1` to skip updating existing installation |
 
